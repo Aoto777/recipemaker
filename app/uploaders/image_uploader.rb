@@ -7,6 +7,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   include Cloudinary::CarrierWave
   CarrierWave.configure do |config|
     config.cache_storage = :file
+    storage :cloudinary
   end
   # storage :fog
   
