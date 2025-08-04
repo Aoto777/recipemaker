@@ -1,0 +1,76 @@
+<h1>(recipemaker)</h1>
+<h3>新規投稿ページ</h3>
+<%= form_for @tweet do |f| %>
+
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title, :size => 30 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :recipe  %>
+    <%= f.text_area :recipe, :size => "30x2" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :material  %>
+    <%= f.text_area :material, :size => "30x2" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :time  %>
+    <%= f.text_area :time, :size => "30x2" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :comment  %>
+    <%= f.text_area :comment, :size => "30x2" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :image %>
+    <%= f.file_field :image %>
+    </div>
+
+<h5>総合評価</h5>
+     <div class="post_form">
+        <%= f.radio_button :overall, 5 ,id: 'star1'%>
+        <label for="star1"><span class="text">最高</span>★</label>
+    
+        <%= f.radio_button :overall, 4 ,id: 'star2'%>
+        <label for="star2"><span class="text">良い</span>★</label>
+    
+        <%= f.radio_button :overall, 3 ,id: 'star3'%>
+        <label for="star3"><span class="text">普通</span>★</label>
+    
+        <%= f.radio_button :overall, 2 ,id: 'star4'%>
+        <label for="star4"><span class="text">悪い</span>★</label>
+    
+        <%= f.radio_button :overall, 1 ,id: 'star5'%>
+        <label for="star5"><span class="text">最悪</span>★</label>
+     </div>
+<!--- 総合評価の星の部分終わり------->
+
+
+<!--- 授業レベルの星の部分 ------------>
+    <h5>授業レベル</h5>
+     <div class="post_form">
+        <%= f.radio_button :level,  5 ,id: 'star6'%>
+        <label for="star6"><span class="text">難しい</span>★</label>
+    
+        <%= f.radio_button :level,  4 ,id: 'star7'%>
+        <label for="star7"><span class="text">やや難しい</span>★</label>
+    
+        <%= f.radio_button :level, 3 ,id: 'star8'%>
+        <label for="star8"><span class="text">普通</span>★</label>
+    
+        <%= f.radio_button :level , 2 ,id: 'star9'%>
+        <label for="star9"><span class="text">やや簡単</span>★</label>
+    
+        <%= f.radio_button :level , 1 ,id: 'star10'%>
+        <label for="star10"><span class="text">簡単</span>★</label>
+     </div>
+<!--- 総合評価の星の部分 ---------->
+<%= f.submit "投稿する" %>
+<% end %>

@@ -1,0 +1,56 @@
+<h1>reciprmaker</h1>
+<h3>一覧ページ</h3>
+
+<h3>投稿を検索</h3>
+ <%= form_tag({controller:"tweets",action:"index"}, method: :get) do %>
+   <%= text_field_tag :search %>
+   <%= submit_tag '検索する'  %>
+<% end %>
+
+<%= link_to "新規投稿へ", new_tweet_path %>
+
+<div class="tweets-container">
+  <% @tweets.each do |t| %>
+    <div class="tweet">
+     <%= t.user.email %> 
+      <%= t.title %>
+      <%= t.recipe %>
+      <%= t.material %>
+      <%= t.time %>
+      <%= t.comment %>
+      <%= image_tag t.image_url, size: "250x200" if t.image? %>
+      <%= link_to "詳細へ", tweet_path(t.id) %>
+     <%= link_to "編集する", edit_tweet_path(t.id) %>
+     <%= button_to "削除する", tweet_path(t.id), method: :delete %>
+     <%= link_to "ログイン", tweets_path %>
+     <%= link_to "新規登録", new_user_registration_path %>
+     <%= button_to 'ログアウト', destroy_user_session_path, method: :delete %> 
+   
+
+    <div>
+    <h2>総合評価：
+    <span class="star-rating">
+       <span class="star-rating-front" style="width: <%= getPercent(t.overall) %>%;">★★★★★</span>
+       <span class="star-rating-back">★★★★★</span>
+    </span> 
+    </h2>
+    </div>
+    
+    <!--- 総合評価の星の部分終わり------->
+    
+    
+    <!--- 授業レベルの星の部分 ------------>
+    <div>
+    <h2>授業レベル：
+    <span class="star-rating">
+       <span class="star-rating-front" style="width: <%= getPercent(t.level) %>%;">★★★★★</span>
+       <span class="star-rating-back">★★★★★</span>
+    </span>
+    </h2>
+    </div>
+    <!--- 授業レベルの星の部分終わり-------->
+    
+    </div>
+<% end %>
+
+<%= link_to '新規登録をする', new_tweet_path%>
