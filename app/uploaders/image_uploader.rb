@@ -11,7 +11,6 @@ class ImageUploader < CarrierWave::Uploader::Base
   # storage :fog
 
 
-  storage :file
 
 
   
