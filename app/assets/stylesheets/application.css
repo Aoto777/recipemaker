@@ -13,3 +13,50 @@
  *= require_tree .
  *= require_self
  */
+
+/* ===== ヘッダー帯 ===== */
+header {
+  background-color: #fff4e6; /* やさしいオレンジベージュ */
+  border-bottom: 1px solid #f2d7bf;
+  padding: 10px 0;
+}
+
+/* ===== ヘッダーのボタンを横並び＆右寄せ ===== */
+.header-list ul {
+  display: flex;
+  justify-content: flex-end; /* 右寄せ */
+  gap: 8px; /* ボタン間の余白 */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header-list li {
+  display: inline-block;
+}
+
+/* devise の button_to が生成する form を横並びに */
+.header-list form {
+  display: inline-block;
+  margin: 0;
+}
+
+/* ===== ボタン共通デザイン ===== */
+.header-list a,
+.header-list button,
+.header-list input[type="submit"] {
+  background-color: #f28c28;  /* にんじん色 */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.header-list a:hover,
+.header-list button:hover,
+.header-list input[type="submit"]:hover {
+  background-color: #e67c20; /* 濃いめオレンジ */
+}

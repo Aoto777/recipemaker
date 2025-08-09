@@ -1,0 +1,75 @@
+.index1{
+text-align: center;
+ font-size: 30px;
+}
+
+.index2 {
+  text-align: center; /* 検索欄全体を中央寄せ */
+}
+
+.index2 input[type="text"] {
+  width: 400px;   /* 横幅 */
+  height: 30px;   /* 高さ */
+  padding: 0 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.index2 input[type="submit"] {
+  height: 30px;
+  padding: 0 20px;
+}
+
+.index3-image {
+  text-align: center; 
+  width: 100px;   /* 横幅 */
+  height: 100px;   /* 高さ */
+}
+
+.index3-4{
+display:flex
+}
+
+/* 右下固定の投稿ボタン */
+.fab-post {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px)); /* iPhoneの安全域考慮 */
+  z-index: 1000;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 16px;
+
+  background: #f28c28;   /* お好みで色調整 */
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(0,0,0,.15);
+  cursor: pointer;
+  transition: transform .05s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+.fab-post:hover {
+  filter: brightness(0.98);
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+
+/* スマホは少し大きめ＆タップしやすく */
+@media (max-width: 640px) {
+  .fab-post {
+    height: 56px;
+    padding: 0 18px;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.index5{
+ font-size: 30px;
+}

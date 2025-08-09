@@ -1,13 +1,28 @@
-<h1>reciprmaker</h1>
-<h3>一覧ページ</h3>
+<div class="index1">
+ <h1>reciprmaker</h1>
+</div>
 
-<h3>投稿を検索</h3>
+<div class="index2">
+ <h3>投稿を検索</h3>
  <%= form_tag({controller:"tweets",action:"index"}, method: :get) do %>
    <%= text_field_tag :search %>
    <%= submit_tag '検索する'  %>
-<% end %>
+ <% end %>
+</div>
 
-<%= link_to "新規投稿へ", new_tweet_path %>
+<div class="index5">
+ 人気の料理
+</div>
+
+<div class="index3-4"> 
+   <div class="index3"> 
+      <%= image_tag 'インターン.png', class:"index3-image"%>
+   </div>
+
+   <div class="index4"> 
+  <%= link_to "レシピ投稿", new_tweet_path, class: "fab-post" %>
+  </div>
+</div>
 
 <div class="tweets-container">
   <% @tweets.each do |t| %>
