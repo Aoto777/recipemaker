@@ -1,35 +1,179 @@
-<h1>GeekTwitter</h1>
-<h3>Tweet詳細</h3>
-<div class="tweet">
-  <p><%= @tweet.title %></p>
-  <p><%= @tweet.recipe %></p>
-  <p><%= @tweet.material %></p>
-  <p><%= @tweet.time %></p>
-  <p><%= @tweet.comment %></p>
-  <%= image_tag @tweet.image.url if @tweet.image.present? %>
-  <p><%= @tweet.created_at %></p>
-</div>
+<div class="post-show">
 
-<div class="comment-wrapper">
-  <p>コメント一覧</p>
-  <% @comments.each do |c| %>
-    <div>
-      <%= c.user.email unless c.user.blank? %>
-      <br>
-      <%= c.content %>
+  <!-- 写真 -->
+  <figure class="ps-photo">
+    <% if @tweet.image? || @tweet.image.present? %>
+      <%= image_tag @tweet.image.url, class: "ps-photo__img", alt: @tweet.title %>
+    <% else %>
+      <div class="ps-photo__placeholder" role="img" aria-label="レシピ写真なし">写真</div>
+    <% end %>
+    <%# 画像にキャプションを将来的に追加したい場合はここに figcaption %>
+  </figure>
+
+  <!-- タイトル / 調理時間 / 星評価 -->
+  <header class="ps-section ps-meta ps-card">
+    <h1 class="ps-title"><%= @tweet.title.presence || "タイトル" %></h1>
+
+    <div class="ps-meta__row" role="list">
+      <div class="ps-meta__item" role="listitem">
+        <span class="ps-meta__label">調理時間</span>
+        <span class="ps-meta__value"><%= @tweet.time.presence || "-" %></span>
+      </div>
+
+      <div class="ps-meta__item" role="listitem">
+        <span class="ps-meta__label">総合評価</span>
+        <span class="ps-meta__value">
+          <% overall = @tweet.overall.to_i.clamp(0,5) %>
+          <span class="star-rating" aria-label="総合評価 <%= overall %> / 5">
+            <span class="star-rating-front" style="width:<%= overall * 20 %>%">★★★★★</span>
+            <span class="star-rating-back">★★★★★</span>
+          </span>
+          <span class="ps-rating-num"><%= overall %>/5</span>
+        </span>
+      </div>
+
+      <div class="ps-meta__item" role="listitem">
+        <span class="ps-meta__label">初心者におすすめ</span>
+        <span class="ps-meta__value">
+          <% level = @tweet.level.to_i.clamp(0,5) %>
+          <span class="star-rating" aria-label="初心者におすすめ度 <%= level %> / 5">
+            <span class="star-rating-front" style="width:<%= level * 20 %>%">★★★★★</span>
+            <span class="star-rating-back">★★★★★</span>
+          </span>
+          <span class="ps-rating-num"><%= level %>/5</span>
+        </span>
+      </div>
     </div>
-      <br>
-  <% end %>
+  </header>
 
-  <% if user_signed_in? %>
-    <%= form_with(model: [@tweet, @comment], local: true) do |f| %>
-      <%= f.text_area :content %>
-      <%= button_tag type: "submit" do %>
-        <i class="far fa-comments"></i> コメントする
+  <!-- 紹介文 -->
+  <section class="ps-section ps-card">
+    <h2 class="ps-heading">紹介文</h2>
+    <div class="ps-body prose"><%= simple_format(@tweet.comment.to_s) %></div>
+  </section>
+
+<!-- 材料 -->
+<section class="ps-section ps-card" aria-labelledby="ingredients-title">
+  <div class="ps-heading-row">
+    <h2 class="ps-heading" id="ingredients-title">材料</h2>
+    <% if @tweet.servings.present? %>
+      <span class="ps-servings"><%= @tweet.servings %>人前</span>
+    <% end %>
+  </div>
+
+
+  <% ingredients = parse_ingredients(@tweet.material.to_s) %>
+
+  <% if ingredients.blank? %>
+    <p class="ps-note">材料は未入力です。</p>
+  <% else %>
+    <% ingredients.each do |block| %>
+      <% if block[:title].present? %>
+        <h3 class="ps-subheading"><%= block[:title] %></h3>
       <% end %>
+
+      <ul class="ingredients" role="list">
+        <% block[:items].each_with_index do |ing, i| %>
+          <% amount = [ing[:qty], ing[:unit]].compact.join("") %>
+          <li class="ingredients__item" role="listitem">
+            <label class="ingredients__checkwrap">
+              <input type="checkbox"
+                     class="ingredients__check"
+                     aria-label="材料<%= i+1 %>を準備完了にする">
+              <span class="ingredients__text">
+                <span class="ingredients__name"><%= ing[:name] %></span>
+                <% if amount.present? %>
+                  <span class="ingredients__amount"><%= amount %></span>
+                <% end %>
+                <% if ing[:note].present? %>
+                  <span class="ingredients__note">(<%= ing[:note] %>)</span>
+                <% end %>
+              </span>
+            </label>
+          </li>
+        <% end %>
+      </ul>
     <% end %>
   <% end %>
-</div>
+</section>
 
-<%= link_to "Tweet一覧に戻る", tweets_path %>
-<%= link_to "編集する", edit_tweet_path(@tweet.id) %>
+
+
+<!-- 作り方 -->
+<section class="ps-section ps-card" aria-labelledby="steps-title">
+  <h2 class="ps-heading" id="steps-title">作り方</h2>
+
+  <% steps = parse_steps(@tweet.recipe.to_s) %>
+
+  <% if steps.blank? %>
+    <p class="ps-note">作り方は未入力です。</p>
+  <% else %>
+    <ol class="steps" role="list">
+      <% steps.each_with_index do |step, i| %>
+        <li class="steps__item" role="listitem">
+          <label class="steps__checkwrap">
+            <input type="checkbox" class="steps__check" aria-label="手順<%= i+1 %>を完了">
+            <span class="steps__text"><%= step %></span>
+          </label>
+        </li>
+      <% end %>
+    </ol>
+  <% end %>
+</section>
+
+
+
+    <!-- コメント（一覧＋投稿） -->
+  <section class="ps-section ps-card" id="comments">
+    <h2 class="ps-heading">コメント</h2>
+
+    <ul class="comments">
+      <% @comments.each do |c| %>
+        <li class="comment">
+          <div class="comment__meta">
+            <span class="comment__author"><%= c.user&.email || "名無しさん" %></span>
+            <span class="comment__time"><%= c.created_at.strftime("%Y/%m/%d %H:%M") %></span>
+            <% if user_signed_in? && c.user == current_user %>
+              <%= link_to "削除",
+                  tweet_comment_path(@tweet, c),
+                  data: { turbo_method: :delete, turbo_confirm: "削除しますか？" },
+                  class: "comment__delete", aria: { label: "コメントを削除" } %>
+            <% end %>
+          </div>
+          <div class="comment__body"><%= simple_format(h(c.content)) %></div>
+        </li>
+      <% end %>
+
+      <% if @comments.blank? %>
+        <li class="comment comment--empty">まだコメントはありません。最初の感想を書きましょう！</li>
+      <% end %>
+    </ul>
+
+    <% if user_signed_in? %>
+  <div class="comment-form-wrap">
+    <%= form_with model: [@tweet, @comment], class: "comment-form" do |f| %>
+
+      <%# 失敗時に理由が見えるとデバッグが速い %>
+      <% if defined?(@comment) && @comment.errors.any? %>
+        <ul class="form-errors">
+          <% @comment.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <%= f.text_area :content,
+            rows: 4,
+            class: "np-input np-textarea",
+            placeholder: "レシピの感想を書いてください！" %>
+
+      <div class="ps-footer ps-footer--form">
+        <%= f.submit "コメントする", class: "np-btn" %>
+      </div>
+    <% end %>
+  </div>
+  <% else %>
+    <p class="ps-note">コメントするにはログインしてください。</p>
+  <% end %>
+  </section>
+</div>

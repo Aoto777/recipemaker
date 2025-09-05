@@ -1,15 +1,141 @@
-<%= form_for @tweet do |f| %>
-  <%= f.label :title %>
-  <%= f.text_field :title, :size => 140 %> 
-   <%= f.label :recipe %>
-  <%= f.text_field :recipe, :size => 140 %> 
-   <%= f.label :material %>
-  <%= f.text_field :material, :size => 140 %> 
-   <%= f.label :time %>
-  <%= f.text_field :time, :size => 140 %> 
-   <%= f.label :comment %>
-  <%= f.text_field :comment, :size => 140 %> 
-   <%= f.label :image %>
-  <%= f.text_field :image, :size => 140 %> 
-  <%= f.submit "編集する" %>
-<% end %>
+<!-- app/views/tweets/edit.html.erb -->
+<div class="new-post">
+  <div class="new-post__card">
+    <div class="new-post__titlebar">レシピを編集</div>
+
+    <%= form_for @tweet, html: { class: "new-post__form", multipart: true } do |f| %>
+
+      <!-- 画像のキャッシュ（エラーで戻った時に保持） -->
+      <%= f.hidden_field :image_cache %>
+
+      <!-- タイトル -->
+      <section class="np-section">
+        <p class="np-label">タイトル</p>
+        <%= f.text_field :title, placeholder: "タイトルを入力", class: "np-input" %>
+      </section>
+
+      <!-- 料理の写真 -->
+      <section class="np-section">
+        <p class="np-label">料理の写真</p>
+        <div id="new-image">
+          <label class="np-photo">
+            <%= f.file_field :image,
+                  accept: "image/*",
+                  class: "np-photo__input",
+                  onchange: "previewNewImage(event)" %>
+
+            <div class="np-photo__dummy">
+              <%# 既存画像があれば表示、なければダミー %>
+              <img id="preview-img"
+                   src="<%= @tweet.image? ? @tweet.image.url : '' %>"
+                   class="new-img"
+                   style="<%= @tweet.image? ? '' : 'display:none;' %>">
+
+              <% unless @tweet.image? %>
+                <div class="np-photo__icon">📷</div>
+                <p>料理の写真をのせる</p>
+              <% end %>
+            </div>
+          </label>
+        </div>
+      </section>
+
+
+      <!-- 材料 -->
+      <section class="np-section">
+        <p class="np-label">材料</p>
+        <%= f.text_area :material, placeholder: "材料を入力", class: "np-input np-textarea" %>
+      </section>
+
+      <!-- 作り方 -->
+      <section class="np-section">
+        <p class="np-label">作り方</p>
+        <%= f.text_area :recipe, placeholder: "作り方を入力", class: "np-input np-textarea" %>
+      </section>
+
+      <!-- 何人前 -->
+      <section class="np-section">
+        <p class="np-label">何人前</p>
+        <div style="display:flex; gap:8px; align-items:center; width:90%; max-width:660px; margin:0 auto;">
+          <%= f.number_field :servings, class: "np-input", min: 1, max: 20, placeholder: "例：2" %>
+          <span>人前</span>
+        </div>
+      </section>
+
+
+      <!-- 調理時間 -->
+      <section class="np-section time-section">
+        <p class="np-label">調理時間</p>
+        <%= f.text_field :time, placeholder: "例：20分", class: "np-input" %>
+      </section>
+
+      <!-- 星評価：総合評価 -->
+      <div class="post8-section">
+        <div class="post8-label">総合評価</div>
+        <div class="post_form">
+          <%= f.radio_button :overall, 5 ,id: 'star1'%>
+          <label for="star1"><span class="text">最高</span>★</label>
+
+          <%= f.radio_button :overall, 4 ,id: 'star2'%>
+          <label for="star2"><span class="text">良い</span>★</label>
+
+          <%= f.radio_button :overall, 3 ,id: 'star3'%>
+          <label for="star3"><span class="text">普通</span>★</label>
+
+          <%= f.radio_button :overall, 2 ,id: 'star4'%>
+          <label for="star4"><span class="text">悪い</span>★</label>
+
+          <%= f.radio_button :overall, 1 ,id: 'star5'%>
+          <label for="star5"><span class="text">最悪</span>★</label>
+        </div>
+      </div>
+
+      <!-- 星評価：授業レベル -->
+      <div class="post9-section">
+        <div class="post9-label">初心者におすすめ</div>
+        <div class="post_form">
+          <%= f.radio_button :level,  5 ,id: 'star6'%>
+          <label for="star6"><span class="text">簡単</span>★</label>
+
+          <%= f.radio_button :level,  4 ,id: 'star7'%>
+          <label for="star7"><span class="text">やや簡単</span>★</label>
+
+          <%= f.radio_button :level, 3 ,id: 'star8'%>
+          <label for="star8"><span class="text">普通</span>★</label>
+
+          <%= f.radio_button :level , 2 ,id: 'star9'%>
+          <label for="star9"><span class="text">やや難しい</span>★</label>
+
+          <%= f.radio_button :level , 1 ,id: 'star10'%>
+          <label for="star10"><span class="text">難しい</span>★</label>
+        </div>
+      </div>
+
+      <!-- レシピの紹介 -->
+      <section class="np-section">
+        <p class="np-label">レシピの紹介</p>
+        <%= f.text_area :comment, placeholder: "レシピの概要や感想を入力", class: "np-input np-textarea" %>
+      </section>
+
+      <!-- 送信 -->
+      <footer class="np-footer">
+        <%= f.submit "レシピを更新する", class: "np-btn" %>
+      </footer>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  // ファイル選択時に即時プレビュー
+  function previewNewImage(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const img = document.getElementById('preview-img');
+      img.src = ev.target.result;
+      img.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+</script>

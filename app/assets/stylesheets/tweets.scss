@@ -1,69 +1,97 @@
+/* ===== tokens / base ===== */
+:root{
+  --brand:#F28C28; --bg:#FFFDFC; --surface:#fff;
+  --text:#2B2B2B; --muted:#666; --line:#E5E5E5;
+  --radius-sm:8px; --radius-md:12px;
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06); --shadow-md:0 10px 24px rgba(0,0,0,.1);
+}
+.new-post{ background:var(--bg); color:var(--text); font-family:"Noto Sans JP", system-ui, sans-serif; }
+.new-post__card{
+  max-width: 900px; margin: 16px auto; background: var(--surface);
+  border:1px solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+}
+.new-post__titlebar{
+  background:#FFE3C7; color:#5b3b16; text-align:center; font-weight:800;
+  padding:14px 16px; border-bottom:1px solid var(--line);
+  border-top-left-radius:var(--radius-md); border-top-right-radius:var(--radius-md);
+}
 
-.tweet_form{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 300px;
-    margin: 30px;
-  }
-  .name_field{
-    width: 200px;
-    margin-bottom: 30px;
-  }
+/* ===== section / labels ===== */
+.np-section{ border-top:1px solid var(--line); padding:18px 16px 22px; }
+.np-label{ display:block; font-size:14px; color:#444; margin-bottom:8px; font-weight:700; }
+.np-help{ color:#777; font-size:12px; margin:8px auto 0; max-width:660px; }
+.np-counter{ color:#999; font-size:12px; margin:6px auto 0; max-width:660px; text-align:right; }
 
-/*　以下新規投稿ページの星用のCSS　*/
+/* ===== inputs ===== */
+.np-input{
+  display:block; width:90%; max-width:660px; margin:0 auto;
+  height:44px; padding:0 14px; background:#f4f4f4; border:1px solid var(--line);
+  border-radius:999px; text-align:left; font-size:16px; box-sizing:border-box;
+}
+.np-textarea{
+  min-height:120px; height:auto; resize:vertical; padding:12px 14px;
+  border-radius:12px; background:#f9f9f9; border:1px solid var(--line);
+}
+.np-input:focus, .np-textarea:focus{
+  outline:3px solid color-mix(in oklab, var(--brand) 70%, white 30%); outline-offset:2px;
+}
 
-  .post_form{
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-  }
-  .post_form input[type='radio']{
-    display: none;
-  }
-  .post_form label{
-    position: relative;
-    padding: 10px 10px 0;
-    color: gray;
-    cursor: pointer;
-    font-size: 30px; /*星の大きさを変更するときはここ*/
-  }
-  .post_form label .text{
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    text-align: center;
-    font-size: 9px; /*星の上の説明書きの大きさを変更するときはここ*/
-    color: gray;
-  }
-  .post_form label:hover,
-  .post_form label:hover ~ label,
-  .post_form input[type='radio']:checked ~ label{
-    color: #ffcc00;
-  }
+/* ===== time section specific ===== */
+.np-section.time-section{ border-bottom:1px solid var(--line); padding-bottom:20px; margin-bottom:0; }
 
+/* ===== fieldset (ratings) ===== */
+/* 星評価セクションの枠線を消す */
+.np-fieldset {
+  border: none;   /* ← 枠線を消す */
+  padding-top: 18px;  /* 余白は維持して自然に */
+}
 
-/*　以下一覧ページの星用のCSS　*/
+.np-legend{ font-weight:800; font-size:14px; color:#444; padding:0 6px; margin-bottom:8px; }
 
-  .star-rating {
-    position: relative;
-    display: inline-block;
-    width: 5em;
-    height: 1em;
-    font-size: 25px;
-  }
-  .star-rating-front {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    color: #ffcc33;
-  }
-  .star-rating-back {
-    display: inline-block;
-    color: #ccc;
-    
-  }
+/* ===== stars (既存UIのまま・微修正) ===== */
+.post_form{ display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:2px; }
+.post_form input[type='radio']{ display:none; }
+.post_form label{ position:relative; padding:10px 10px 0; color:gray; cursor:pointer; font-size:30px; }
+.post_form label .text{ position:absolute; left:0; top:0; right:0; text-align:center; font-size:10px; color:gray; }
+.post_form label:hover,
+.post_form label:hover ~ label,
+.post_form input[type='radio']:checked ~ label{ color:#ffcc00; }
 
+/* ===== submit ===== */
+.np-footer{
+  border-top:1px solid var(--line); background:#faf7f2; padding:20px 16px; text-align:center;
+  border-bottom-left-radius:var(--radius-md); border-bottom-right-radius:var(--radius-md);
+}
+.np-btn{
+  appearance:none; border:none; background:var(--brand); color:#fff; font-weight:800;
+  font-size:16px; border-radius:999px; padding:12px 28px; box-shadow:0 10px 24px rgba(242,140,40,.25);
+  cursor:pointer; transition: transform .05s, filter .2s, box-shadow .2s;
+}
+.np-btn:hover{ filter:brightness(.98); box-shadow:0 14px 34px rgba(242,140,40,.30); }
+.np-btn:active{ transform: translateY(1px); }
+
+/* ===== mobile ===== */
+@media (max-width:640px){
+  .new-post__card{ margin: 8px; }
+  .np-input{ width: 94%; }
+  .np-help{ padding: 0 6px; }
+}
+
+/* =========================
+   ★ 写真アップロード（修正前のCSSをそのまま）
+   ========================= */
+.new-post { background:#fff; } /* 既存のベース指定があるため残します（上書きされますが互換のため） */
+.np-photo{ display:block; width:100%; max-width:760px; margin:8px auto 0; }
+.np-photo__input{ display:none; }
+.np-photo__dummy{
+  background:#e5e5e5; height:400px; border-radius:4px;
+  box-shadow:0 6px 10px rgba(0,0,0,.08);
+  display:grid; place-items:center; text-align:center; color:#555;
+  position: relative; /* 子absolute基準 */
+  overflow: hidden;   /* 画像がはみ出さないように */
+}
+.np-photo__dummy p{ margin-top:8px; font-size:18px; }
+.np-photo__icon{ font-size:64px; line-height:1; }
+.new-img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
+}

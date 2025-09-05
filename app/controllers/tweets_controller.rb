@@ -1,59 +1,58 @@
 class TweetsController < ApplicationController
-  
-  before_action :authenticate_user!, only: [:new, :create]
+  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :set_tweet, only: [:show, :edit, :update, :destroy]
 
   def index
-    if params[:search] == nil
-      @tweets= Tweet.all
-    elsif params[:search] == ''
-      @tweets= Tweet.all
-    else
-    @tweets = Tweet.where("title LIKE ? ",'%' + params[:search] + '%')
-    end
- end
+    @tweets = Tweet.order(created_at: :desc)
+
+    # 固定レシピ(YAML)
+    data = YAML.load_file(Rails.root.join("config/featured_recipes.yml")) rescue {}
+    @popular_recipes     = data["popular"]     || []
+    @recommended_recipes = data["recommended"] || []
+  end
+
+  def show
+    @tweet = Tweet.find(params[:id])
+    # @tweet は set_tweet 済み
+     @comments = @tweet.comments
+     @comment = Comment.new
+  end
 
   def new
     @tweet = Tweet.new
   end
+
   def create
-    @tweet = Tweet.new(tweet_params)
-    @tweet.user_id = current_user.id
-
+    @tweet = current_user.tweets.new(tweet_params)
     if @tweet.save
-      redirect_to action: "index"
+      redirect_to root_path, notice: "投稿しました。"
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
- end
-
-  def show
-    @tweet = Tweet.find(params[:id])
-    @comments = @tweet.comments
-    @comment = Comment.new
   end
 
-  def edit
-    @tweet = Tweet.find(params[:id])
-  end
+  def edit; end
 
- def update
-    tweet = Tweet.find(params[:id])
-    if tweet.update(tweet_params)
-      redirect_to :action => "show", :id => tweet.id
+  def update
+    if @tweet.update(tweet_params)
+      redirect_to @tweet, notice: "更新しました。"
     else
-      redirect_to :action => "new"
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    tweet = Tweet.find(params[:id])
-    tweet.destroy
-    redirect_to action: :index
+    @tweet.destroy
+    redirect_to tweets_path, notice: "削除しました。"
   end
- private
 
- def tweet_params
-  params.require(:tweet).permit(:title, :recipe, :material, :time, :comment, :image, :overall,:level)
- end
- 
+  private
+
+  def set_tweet
+    @tweet = Tweet.find(params[:id])
+  end
+
+  def tweet_params
+    params.require(:tweet).permit(:title, :recipe, :material, :time, :comment, :image, :overall, :level, :servings)
+  end
 end

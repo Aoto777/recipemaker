@@ -1,27 +1,53 @@
-<h2>ログイン</h2>
-<p>※登録したメールアドレスとパスワードを入力してください。</p>
+<%# app/views/users/sessions/new.html.erb %>
+<main class="app">
+  <!-- 左サイド：ブランド -->
+  <section class="left" aria-label="brand">
+    <div class="topbar">
+    <!-- ← アイコンだけのホームリンク -->
+       <a href="/" class="back" aria-label="ホームに戻る">←</a>
+       <a href="/" class="logo" aria-label="ホームに戻る">ホームに戻る</a>
+</div>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <h2>メール </h2><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+    <div class="title">マイページへログイン</div>
+    <div class="footer-note">ログインすると自分のレシピを　　　　　　投稿できるようになります</div>
+  </section>
 
-  <div class="field">
-    <h2>パスワード </h2><br />
-    <%= f.password_field :password, autocomplete: "off" %>
-  </div>
+  <!-- 右サイド：フォーム -->
+  <section class="right" aria-label="login-form">
+    <div class="panel">
+      <p class="help">※登録したメールアドレスとパスワードを入力してください。</p>
 
-  <% if devise_mapping.rememberable? -%>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <h2>私を覚える</h2>
+      <%= render "users/shared/error_messages", resource: resource if defined?(resource) %>
+
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+
+        <label class="label" for="user_email">メールアドレス</label>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input", placeholder: "you@example.com" %>
+
+        <div style="height:12px"></div>
+
+        <label class="label" for="user_password">パスワード</label>
+        <%= f.password_field :password, autocomplete: "current-password", class: "input" %>
+
+        <% if devise_mapping.rememberable? %>
+          <label class="remember">
+            <%= f.check_box :remember_me %>
+            <span>ログイン状態を保持する</span>
+          </label>
+        <% end %>
+
+        <%= f.submit "ログイン", class: "primary" %>
+      <% end %>
+
+      <p class="alt-login">
+        <%= link_to "パスワードをお忘れの方", new_password_path(resource_name) %>
+      </p>
+
+      <div class="divider"><span>または</span></div>
+
+      <%= link_to "新規登録", new_registration_path(resource_name), class: "outline" %>
+
+      
     </div>
-  <% end -%>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
-<% end %>
-
-<%= render "users/shared/links" %>
+  </section>
+</main>

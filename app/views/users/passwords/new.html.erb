@@ -1,16 +1,30 @@
-<h2>Forgot your password?</h2>
+<%# app/views/users/passwords/new.html.erb %>
+<main class="app">
+  <!-- 左サイド：ブランド -->
+  <section class="left" aria-label="brand">
+    <div class="topbar">
+      <a href="/" class="back" aria-label="ホームに戻る">←</a>
+      <a href="/" class="logo" aria-label="ホームに戻る">ホームに戻る</a>
+    </div>
+    <div class="title">パスワード再発行</div>
+  </section>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
+  <!-- 右サイド：フォーム -->
+  <section class="right" aria-label="forgot-password-form">
+    <div class="panel">
+      <p class="help">登録メールアドレスを入力すると、再設定用リンクを送信します。</p>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+      <%= render "users/shared/error_messages", resource: resource if defined?(resource) %>
 
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name)) do |f| %>
+        <label class="label" for="user_email">メールアドレス</label>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input", placeholder: "you@example.com" %>
 
-<%= render "users/shared/links" %>
+        <%= f.submit "再設定リンクを送信", class: "primary" %>
+      <% end %>
+
+      <div class="divider"><span>思い出した方・誤送信の場合</span></div>
+      <%= link_to "ログインへ戻る", new_session_path(resource_name), class: "outline" %>
+    </div>
+  </section>
+</main>

@@ -28,3 +28,4 @@ production:
   encoding: unicode # 追加
   url: <%= ENV["DATABASE_URL"] %>
   database: storage/production.sqlite3
+

@@ -1,76 +1,108 @@
-<h1>(recipemaker)</h1>
-<h3>新規投稿ページ</h3>
-<%= form_for @tweet do |f| %>
+<!-- app/views/tweets/new.html.erb -->
+<div class="new-post">
+  <div class="new-post__card">
+    <div class="new-post__titlebar">レシピを書く</div>
+
+    <%= form_for @tweet, html: { class: "new-post__form", multipart: true } do |f| %>
+
+      <!-- タイトル -->
+      <section class="np-section">
+        <label class="np-label" for="tweet_title">タイトル</label>
+        <%= f.text_field :title, placeholder: "例：ふわふわ卵の親子丼", class: "np-input", maxlength: 50, aria: { describedby: "title-help" } %>
+        <div class="np-help" id="title-help">料理名＋特徴が伝わるタイトルにしましょう（50文字まで）</div>
+        <div class="np-counter" data-for="tweet_title"></div>
+      </section>
+
+      <!-- 料理の写真（★CSSは修正前のまま適用） -->
+      <section class="np-section">
+        <p class="np-label">料理の写真</p>
+        <div id="new-image">
+          <label class="np-photo">
+            <%= f.file_field :image, accept: "image/*", class: "np-photo__input" %>
+            <div class="np-photo__dummy">
+              <div class="np-photo__icon">📷</div>
+              <p>クリックして画像を載せる</p>
+             <small class="np-help">推奨：横長・2MB以下・JPEG/PNG</small>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <!-- 材料 -->
+      <section class="np-section">
+        <label class="np-label" for="tweet_material">材料</label>
+        <%= f.text_area :material, placeholder: "例）\n鶏もも肉…200g\n玉ねぎ…1/2個\n卵…2個\nめんつゆ(3倍)…大さじ3\n水…大さじ3", class: "np-input np-textarea", rows: 6, maxlength: 2000, aria: { describedby: "material-help" } %>
+        <div class="np-help" id="material-help">1行に1つずつ「食材…分量」で書くと読みやすいです。</div>
+        <div class="np-counter" data-for="tweet_material"></div>
+      </section>
+
+      <!-- 作り方 -->
+      <section class="np-section">
+        <label class="np-label" for="tweet_recipe">作り方</label>
+        <%= f.text_area :recipe, placeholder: "例）\n玉ねぎを薄切りにする。\nめんつゆと水を沸かし、玉ねぎと鶏肉を煮る。\n溶き卵を2回に分けて入れ、火を止める。", class: "np-input np-textarea", rows: 8, maxlength: 4000, aria: { describedby: "recipe-help" } %>
+        <div class="np-help" id="recipe-help">改行するだけで自動で手順番号をつけてくれます。また火加減や目安時間も書くと分かりやすくなります。</div>
+        <div class="np-counter" data-for="tweet_recipe"></div>
+      </section>
 
 
-  <div class="field">
-    <%= f.label :title %>
-    <%= f.text_field :title, :size => 30 %>
+       <!-- 何人前 -->
+      <section class="np-section">
+        <p class="np-label">何人前</p>
+        <div style="display:flex; gap:8px; align-items:center; width:90%; max-width:660px; margin:0 auto;">
+          <%= f.number_field :servings, class: "np-input", min: 1, max: 20, placeholder: "例：2" %>
+          <span>人前</span>
+        </div>
+      </section>
+
+      <!-- 調理時間 -->
+      <section class="np-section time-section">
+        <label class="np-label" for="tweet_time">調理時間</label>
+        <%= f.text_field :time, placeholder: "例：20分", class: "np-input", list: "time-suggestions" %>
+        <datalist id="time-suggestions">
+          <option value="10分"><option value="15分"><option value="20分">
+          <option value="30分"><option value="45分">
+        </datalist>
+      </section>
+
+      <!-- 星評価：総合評価 -->
+      <fieldset class="np-section np-fieldset">
+      <legend class="np-legend">総合評価</legend>
+      <div class="post_form">
+          <%= f.radio_button :overall, 5 ,id: 'star1'%><label for="star1"><span class="text">最高</span>★</label>
+          <%= f.radio_button :overall, 4 ,id: 'star2'%><label for="star2"><span class="text">良い</span>★</label>
+          <%= f.radio_button :overall, 3 ,id: 'star3'%><label for="star3"><span class="text">普通</span>★</label>
+          <%= f.radio_button :overall, 2 ,id: 'star4'%><label for="star4"><span class="text">悪い</span>★</label>
+          <%= f.radio_button :overall, 1 ,id: 'star5'%><label for="star5"><span class="text">最悪</span>★</label>
+        </div>
+      </fieldset>
+
+      <!-- 星評価：初心者おすすめ -->
+      <section class="np-section">
+      <p class="np-label">初心者におすすめ</p>
+      <div class="post_form">
+          <%= f.radio_button :level,  5 ,id: 'star6'%><label for="star6"><span class="text">簡単</span>★</label>
+          <%= f.radio_button :level,  4 ,id: 'star7'%><label for="star7"><span class="text">やや簡単</span>★</label>
+          <%= f.radio_button :level, 3 ,id: 'star8'%><label for="star8"><span class="text">普通</span>★</label>
+          <%= f.radio_button :level , 2 ,id: 'star9'%><label for="star9"><span class="text">やや難しい</span>★</label>
+          <%= f.radio_button :level , 1 ,id: 'star10'%><label for="star10"><span class="text">難しい</span>★</label>
+        </div>
+      </fieldset>
+
+      <!-- レシピの紹介 -->
+      <section class="np-section">
+        <label class="np-label" for="tweet_comment">レシピの紹介</label>
+        <%= f.text_area :comment, placeholder: "ポイント、食べた感想、コツなどを自由に", class: "np-input np-textarea", rows: 5, maxlength: 1000, aria: { describedby: "comment-help" } %>
+        <div class="np-help" id="comment-help">作る前に知っておくと安心な情報を書いてみましょう。</div>
+        <div class="np-counter" data-for="tweet_comment"></div>
+      </section>
+
+      <!-- 送信 -->
+      <footer class="np-footer">
+        <%= f.submit "レシピを公開する", class: "np-btn" %>
+      </footer>
+
+    <% end %>
   </div>
-
-  <div class="field">
-    <%= f.label :recipe  %>
-    <%= f.text_area :recipe, :size => "30x2" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :material  %>
-    <%= f.text_area :material, :size => "30x2" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :time  %>
-    <%= f.text_area :time, :size => "30x2" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :comment  %>
-    <%= f.text_area :comment, :size => "30x2" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :image %>
-    <%= f.file_field :image %>
-    </div>
-
-<h5>総合評価</h5>
-     <div class="post_form">
-        <%= f.radio_button :overall, 5 ,id: 'star1'%>
-        <label for="star1"><span class="text">最高</span>★</label>
-    
-        <%= f.radio_button :overall, 4 ,id: 'star2'%>
-        <label for="star2"><span class="text">良い</span>★</label>
-    
-        <%= f.radio_button :overall, 3 ,id: 'star3'%>
-        <label for="star3"><span class="text">普通</span>★</label>
-    
-        <%= f.radio_button :overall, 2 ,id: 'star4'%>
-        <label for="star4"><span class="text">悪い</span>★</label>
-    
-        <%= f.radio_button :overall, 1 ,id: 'star5'%>
-        <label for="star5"><span class="text">最悪</span>★</label>
-     </div>
-<!--- 総合評価の星の部分終わり------->
+</div>
 
 
-<!--- 授業レベルの星の部分 ------------>
-    <h5>授業レベル</h5>
-     <div class="post_form">
-        <%= f.radio_button :level,  5 ,id: 'star6'%>
-        <label for="star6"><span class="text">難しい</span>★</label>
-    
-        <%= f.radio_button :level,  4 ,id: 'star7'%>
-        <label for="star7"><span class="text">やや難しい</span>★</label>
-    
-        <%= f.radio_button :level, 3 ,id: 'star8'%>
-        <label for="star8"><span class="text">普通</span>★</label>
-    
-        <%= f.radio_button :level , 2 ,id: 'star9'%>
-        <label for="star9"><span class="text">やや簡単</span>★</label>
-    
-        <%= f.radio_button :level , 1 ,id: 'star10'%>
-        <label for="star10"><span class="text">簡単</span>★</label>
-     </div>
-<!--- 総合評価の星の部分 ---------->
-<%= f.submit "投稿する" %>
-<% end %>

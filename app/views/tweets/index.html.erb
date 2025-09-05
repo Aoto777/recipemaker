@@ -1,71 +1,163 @@
-<div class="index1">
- <h1>reciprmaker</h1>
-</div>
+<!-- HERO：写真＋メッセージのスプリット -->
+<section class="hero-split">
+  <div class="hero-split-inner">
+    <!-- 左：大きな写真 -->
+    <div class="hero-photo">
+      <%# app/assets/images に classroom.jpg を入れておく %>
+      <%= image_tag "classroom.png", alt: "気軽に楽しむ料理のイメージ" %>
+    </div>
 
-<div class="index2">
- <h3>投稿を検索</h3>
- <%= form_tag({controller:"tweets",action:"index"}, method: :get) do %>
-   <%= text_field_tag :search %>
-   <%= submit_tag '検索する'  %>
- <% end %>
-</div>
+    <!-- 右：メッセージカード -->
+    <div class="hero-card">
+      <h1 class="hero-card-title">料理は、もっと気軽でいい!</h1>
+      <p class="hero-card-text">
+        包丁が苦手でも大丈夫。材料は少なく、15分でできるレシピから始めよう。
+        「できた！」の体験を、あなたに。
+      </p>
+     <p class="hero-card-text">「できた！」という小さな達成感を、今日から味わってみませんか？</p>
+
+      <!-- 大きめ検索（index専用） -->
+      <div id="search" class="anchor-search"></div>
+
+      <%= form_tag(tweets_path, method: :get, class: "hero-search-form") do %>
+        <%= text_field_tag :search, params[:search], placeholder: "食材・料理名でさがす" %>
+        <%= submit_tag "検索する" %>
+      <% end %>
+    </div>
+  </div>
+</section>
 
 <div class="index5">
- 人気の料理
+  人気の料理 <small class="subnote">みんなに今よく見られているレシピ</small>
+</div>
+<div class="grid-popular">
+  <% @popular_recipes.each do |r| %>
+    <div class="popular-item">
+      <%= link_to featured_recipe_path(r["slug"]), aria: {label: "#{r['title']} の詳細を見る"} do %>
+        <%= image_tag r["image_asset"], alt: r["title"], class: "ph ph-square", style: "object-fit:cover;" %>
+
+        <div class="cap">
+          <div class="cap-title"><%= r["title"] %></div>
+          <% if r["time"].present? || r["overall"].present? || r["level"].present? %>
+            <div class="meta-chips">
+              <% if r["time"].present? %>
+                <span class="chip chip-time">⏱ <%= r["time"] %></span>
+              <% end %>
+              <% if r["overall"].present? %>
+                <span class="chip chip-score">★<%= r["overall"].to_i %>/5</span>
+              <% end %>
+              <% if r["level"].to_i >= 4 %>
+                <span class="chip chip-beginner">🔰 初心者OK</span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+      <% end %>
+    </div>
+  <% end %>
 </div>
 
-<div class="index3-4"> 
-   <div class="index3"> 
-      <%= image_tag 'インターン.png', class:"index3-image"%>
-   </div>
+<div class="index6">
+  おすすめ簡単レシピ <small class="subnote">短時間・材料少なめで作りやすいレシピ</small>
+</div>
+<div class="grid-recommend">
+  <% @recommended_recipes.each do |r| %>
+    <div class="popular-item">
+      <%= link_to featured_recipe_path(r["slug"]), aria: { label: "#{r['title']} の詳細を見る" } do %>
+        <%= image_tag(
+              r["image_asset"].presence || r["image_url"],
+              alt: r["title"],
+              class: "ph ph-square",
+              style: "object-fit: cover;"
+            ) %>
 
-   <div class="index4"> 
-  <%= link_to "レシピ投稿", new_tweet_path, class: "fab-post" %>
-  </div>
+        <div class="cap">
+          <div class="cap-title"><%= r["title"] %></div>
+          <div class="meta-chips">
+            <% if r["time"].present? %>
+              <span class="chip chip-time">⏱ <%= r["time"] %></span>
+            <% end %>
+            <% if r["overall"].present? %>
+              <span class="chip chip-score">★<%= r["overall"].to_i %>/5</span>
+            <% end %>
+            <% if r["level"].to_i >= 4 %>
+              <span class="chip chip-beginner">🔰 初心者OK</span>
+            <% end %>
+          </div>
+        </div>
+
+      <% end %>
+    </div>
+  <% end %>
 </div>
 
-<div class="tweets-container">
+<!-- みんなのレシピ -->
+<div class="index7">みんなのレシピ</div>
+<div class="grid-feed">
   <% @tweets.each do |t| %>
-    <div class="tweet">
-     <%= t.user.email %> 
-      <%= t.title %>
-      <%= t.recipe %>
-      <%= t.material %>
-      <%= t.time %>
-      <%= t.comment %>
-      <%= image_tag t.image_url, size: "250x200" if t.image? %>
-      <%= link_to "詳細へ", tweet_path(t.id) %>
-     <%= link_to "編集する", edit_tweet_path(t.id) %>
-     <%= button_to "削除する", tweet_path(t.id), method: :delete %>
-     <%= link_to "ログイン", tweets_path %>
-     <%= link_to "新規登録", new_user_registration_path %>
-     <%= button_to 'ログアウト', destroy_user_session_path, method: :delete %> 
-   
+    <div class="feed-card">
+      <div class="feed-thumb-wrap">
+      <% if t.image? %>
+        <%= link_to tweet_path(t.id), aria: {label: "#{t.title} の詳細を見る"} do %>
+          <%= image_tag t.image_url, class: "feed-thumb", alt: t.title %>
+        <% end %>
+      <% else %>
+        <%= link_to tweet_path(t.id), class: "feed-thumb-wrap", aria: {label: "#{t.title} の詳細を見る"} do %>
+          <%= image_tag "no-image.svg",
+                class: "feed-thumb no-image",
+                alt: "No image" %>
+        <% end %>
+      <% end %>
+    </div>
 
-    <div>
-    <h2>総合評価：
-    <span class="star-rating">
-       <span class="star-rating-front" style="width: <%= getPercent(t.overall) %>%;">★★★★★</span>
-       <span class="star-rating-back">★★★★★</span>
-    </span> 
-    </h2>
-    </div>
-    
-    <!--- 総合評価の星の部分終わり------->
-    
-    
-    <!--- 授業レベルの星の部分 ------------>
-    <div>
-    <h2>授業レベル：
-    <span class="star-rating">
-       <span class="star-rating-front" style="width: <%= getPercent(t.level) %>%;">★★★★★</span>
-       <span class="star-rating-back">★★★★★</span>
-    </span>
-    </h2>
-    </div>
-    <!--- 授業レベルの星の部分終わり-------->
-    
-    </div>
-<% end %>
+      <div class="feed-body">
+        <div class="feed-title"><%= t.title %></div>
 
-<%= link_to '新規登録をする', new_tweet_path%>
+        <%# ①と整合：こちらは既存のメタや星評価をそのまま利用 %>
+        <div class="feed-meta"><span class="feed-label">調理時間の目安：</span><%= t.time %></div>
+
+        <!-- 星評価 -->
+        <div class="rating-block">
+          <div>
+            総合評価：
+            <span class="star-rating">
+              <span class="star-rating-front" style="width: <%= getPercent(t.overall) %>%;">★★★★★</span>
+              <span class="star-rating-back">★★★★★</span>
+            </span>
+          </div>
+          <div>
+            初心者おすすめ度：
+            <span class="star-rating">
+              <span class="star-rating-front" style="width: <%= getPercent(t.level) %>%;">★★★★★</span>
+              <span class="star-rating-back">★★★★★</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="feed-actions">
+          <%= link_to "詳細へ", tweet_path(t.id) %>
+          <% if user_signed_in? && current_user == t.user %>
+            <span>・</span><%= link_to "編集", edit_tweet_path(t.id) %>
+            <span>・</span><%= button_to "削除", tweet_path(t.id), method: :delete, form: { class: "inline" } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- 右下固定ボタン -->
+<div class="index4">
+  <%= link_to "新規投稿へ",
+    user_signed_in? ? new_tweet_path : new_user_session_path,
+    class: "fab-post" %>
+</div>
+
+<section class="bottom-banner">
+  <h2 class="bb-title">さあ、今日から料理をもっと気軽に！</h2>
+  <p class="bb-text">初心者でも安心、楽しく作れるレシピがたくさん。</p>
+  <!-- ▼押したら検索欄へ -->
+  <a href="#search" class="btn-banner" aria-label="検索欄までスクロール">レシピを探す</a>
+</section>
+

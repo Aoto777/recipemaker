@@ -11,22 +11,43 @@
   </head>
 
   <body>
- <header>
-  <div class="header-list">
-   <ul>
-    <% if user_signed_in? %>
-     <li><%= button_to 'ログアウト', destroy_user_session_path, method: :delete %></li>
-    <% else %>
-     <li><%= link_to "新規登録", new_user_registration_path %></li>
-     <li><%= link_to "ログイン", new_user_session_path %></li>
-    <% end %>
-   </ul>
-  </div>
- </header>
- <main>
-  <%= yield %>
-  </main>
+    <% unless devise_controller? &&
+             %w[sessions registrations passwords].include?(controller_name) &&
+             action_name == 'new' %>
+      <header>
+        <div class="header-inner">
+          <!-- 左側：サイト名 -->
+          <h1 class="site-title">Recipemaker</h1>
 
-</body>
+          <!-- 中央：検索フォーム -->
+          <%= form_tag(tweets_path, method: :get, class: "search-form") do %>
+            <%= text_field_tag :search, nil, placeholder: "食材・料理名でさがす" %>
+            <%= submit_tag "検索する" %>
+          <% end %>
+
+          <!-- 右側：ログイン/ログアウト -->
+          <div class="header-list">
+            <ul>
+              <li><%= link_to 'ホームへ戻る', root_path %></li>
+
+              <% if user_signed_in? %>
+                <li>
+                  <%= link_to 'ログアウト', destroy_user_session_path,
+                              data: { turbo_method: :delete },
+                              class: "logout-link" %>
+                </li>
+              <% else %>
+                <li><%= link_to "新規登録", new_user_registration_path %></li>
+                <li><%= link_to "ログイン", new_user_session_path %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </header>
+    <% end %>
+
+    <main>
+      <%= yield %>
+    </main>
   </body>
 </html>

@@ -1,0 +1,59 @@
+<div class="post-show">
+<div class="ps-photo">
+  <%# 1) assets の論理パス（例: "featured/curry.jpg"）があればそれを使う %>
+  <% if @recipe.respond_to?(:image_asset) && @recipe.image_asset.present? %>
+    <%= image_tag @recipe.image_asset, class: "ps-photo__img", alt: @recipe.title %>
+
+  <%# 2) それが無ければ、これまで通り @recipe.image.url を使う %>
+  <% elsif @recipe.image&.url.present? %>
+    <%= image_tag @recipe.image.url, class: "ps-photo__img", alt: @recipe.title %>
+
+  <%# 3) さらに image_url 文字列を持っている場合にも対応（任意） %>
+  <% elsif @recipe.respond_to?(:image_url) && @recipe.image_url.present? %>
+    <%= image_tag @recipe.image_url, class: "ps-photo__img", alt: @recipe.title %>
+
+  <% else %>
+    <div class="ps-photo__placeholder">写真</div>
+  <% end %>
+</div>
+
+
+  <section class="ps-section ps-meta">
+    <h1 class="ps-title"><%= @recipe.title %></h1>
+
+    <div class="ps-meta__row">
+      <div class="ps-meta__item">
+        <span class="ps-meta__label">調理時間</span>
+        <span class="ps-meta__value"><%= @recipe.time.presence || "-" %></span>
+      </div>
+
+      <div class="ps-meta__item">
+        <span class="ps-meta__label">総合評価</span>
+        <% overall = @recipe.overall.to_i.clamp(0,5) %>
+        <span class="ps-meta__value">
+          <span class="star-rating">
+            <span class="star-rating-front" style="width:<%= overall * 20 %>%">★★★★★</span>
+            <span class="star-rating-back">★★★★★</span>
+          </span>
+          <span class="ps-rating-num"><%= overall %>/5</span>
+        </span>
+      </div>
+
+      <div class="ps-meta__item">
+        <span class="ps-meta__label">初心者におすすめ</span>
+        <% level = @recipe.level.to_i.clamp(0,5) %>
+        <span class="ps-meta__value">
+          <span class="star-rating">
+            <span class="star-rating-front" style="width:<%= level * 20 %>%">★★★★★</span>
+            <span class="star-rating-back">★★★★★</span>
+          </span>
+          <span class="ps-rating-num"><%= level %>/5</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section"><h2 class="ps-heading">紹介文</h2><div class="ps-body"><%= simple_format(@recipe.comment.to_s) %></div></section>
+  <section class="ps-section"><h2 class="ps-heading">材料</h2><div class="ps-body"><%= simple_format(@recipe.material.to_s) %></div></section>
+  <section class="ps-section"><h2 class="ps-heading">作り方</h2><div class="ps-body"><%= simple_format(@recipe.recipe.to_s) %></div></section>
+</div>

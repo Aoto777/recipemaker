@@ -14,49 +14,100 @@
  *= require_self
  */
 
-/* ===== ヘッダー帯 ===== */
+/* ===== ヘッダー全体 ===== */
 header {
-  background-color: #fff4e6; /* やさしいオレンジベージュ */
+  background-color: #fff4e6;
   border-bottom: 1px solid #f2d7bf;
-  padding: 10px 0;
+  padding: 8px 0;
 }
 
-/* ===== ヘッダーのボタンを横並び＆右寄せ ===== */
+.header-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.site-title {
+  font-size: 18px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* ===== 検索フォーム ===== */
+.search-form {
+  display: flex;
+  gap: 8px;
+}
+
+.search-form input[type="text"] {
+  width: 400px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.search-form input[type="submit"] {
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid #ddd;
+  background: #f2f2f2;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ボタンリストを横並びにして改行防止 */
 .header-list ul {
   display: flex;
-  justify-content: flex-end; /* 右寄せ */
-  gap: 8px; /* ボタン間の余白 */
+  gap: 8px;
   list-style: none;
   margin: 0;
   padding: 0;
+  flex-wrap: nowrap; /* ← 改行させない */
 }
 
 .header-list li {
-  display: inline-block;
+  display: flex; /* ← ボタンの高さを揃える */
+  align-items: center;
 }
 
-/* devise の button_to が生成する form を横並びに */
-.header-list form {
-  display: inline-block;
-  margin: 0;
-}
-
-/* ===== ボタン共通デザイン ===== */
 .header-list a,
 .header-list button,
 .header-list input[type="submit"] {
-  background-color: #f28c28;  /* にんじん色 */
+  background-color: #f28c28;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 6px 12px; /* ← 少しコンパクト */
   border-radius: 20px;
   text-decoration: none;
   font-weight: bold;
   cursor: pointer;
+  white-space: nowrap; /* ← ボタン内で改行しない */
+  width: auto;
 }
 
 .header-list a:hover,
 .header-list button:hover,
 .header-list input[type="submit"]:hover {
-  background-color: #e67c20; /* 濃いめオレンジ */
+  background-color: #e67c20;
+}
+
+/* ===== スマホ表示 ===== */
+@media (max-width: 640px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .search-form {
+    width: 100%;
+  }
+  .search-form input[type="text"] {
+    flex: 1;
+    width: 100%;
+  }
 }

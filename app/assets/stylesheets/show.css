@@ -1,0 +1,372 @@
+/* ===== tokens ===== */
+:root{
+  --brand: #F28C28;
+  --brand-weak: #FFE3C7;
+  --bg: #FFFDFC;
+  --surface: #FFFFFF;
+  --text: #2B2B2B;
+  --muted: #666;
+  --line: #E6E6E6;
+  --star: #FFC107;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.06);
+  --shadow-md: 0 12px 28px rgba(0,0,0,.10);
+}
+
+.post-show{
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Sans JP", system-ui, sans-serif;
+  line-height: 1.75;
+}
+
+.ps-photo {
+  width: 100%;
+  max-width: 860px;   /* ← 本文と同じ幅に合わせる */
+  margin: 0 auto 24px;
+  background: #ddd;
+  border-radius: 8px; 
+  overflow: hidden;
+}
+
+.ps-photo__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.ps-photo__placeholder {
+  height: 380px;  /* 本文と揃えて余裕のあるサイズ */
+  display: grid;
+  place-items: center;
+  color: #333;
+  font-size: 20px;
+  background: #e5e5e5;
+}
+
+
+
+/* ===== section/card ===== */
+.ps-section{
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px 18px 26px;
+}
+.ps-card{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin-top: 18px;
+}
+
+/* ===== headings ===== */
+.ps-title{
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  margin: 6px 0 14px;
+}
+.ps-heading{
+  position: relative;
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0 0 12px;
+  padding: 8px 12px 8px 14px;
+  background: #fff;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+}
+.ps-heading::before{
+  content:"";
+  position:absolute; left:0; top:0; bottom:0;
+  width:6px; border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm);
+  background: var(--brand);
+}
+
+/* ===== meta row ===== */
+.ps-meta{ padding-top: 16px; }
+.ps-meta.ps-card{ padding: 18px; }
+.ps-meta__row{
+  display: flex; flex-wrap: wrap; gap: 14px 20px;
+}
+.ps-meta__item{
+  display:flex; align-items:center; gap:8px;
+  padding: 6px 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.ps-meta__label{ color:#444; font-size:14px; font-weight:700; }
+.ps-meta__value{ font-size:16px; }
+.ps-rating-num{ margin-left:6px; color:#666; font-size:14px; }
+
+/* ===== body text (prose) ===== */
+.prose{ line-height: 1.9; }
+.prose p{ margin: 0 0 10px; }
+.prose strong{ font-weight: 700; }
+.prose em{ font-style: italic; }
+
+/* 材料は行頭の視認性を高める（・や数量が見やすい） */
+.prose--ingredients p{ padding-left: 0.2em; text-indent: -0.2em; }
+
+/* 作り方は段落間を広めにして読み間違いを減らす */
+.prose--steps p{ margin: 0 0 12px; }
+
+/* ===== stars ===== */
+.star-rating{
+  position: relative; display: inline-block; line-height:1;
+  width: 5em; height: 1em; font-size: 22px;
+}
+.star-rating-front{
+  position: absolute; top: 0; left: 0;
+  overflow: hidden; color: var(--star); white-space: nowrap;
+}
+.star-rating-back{ color: #ccc; }
+
+/* ===== footer area ===== */
+.ps-footer{
+  border-top: 1px solid var(--line);
+  background: #fafafa;
+  padding: 16px;
+  text-align: center;
+  margin-top: 20px;
+  border-bottom-left-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+}
+.ps-footer--form{
+  background: transparent; border: none; padding: 12px 0 0; text-align: right;
+}
+.ps-btn{
+  appearance: none; border: 1px solid var(--line);
+  background: #fff; color: #333;
+  padding: 10px 18px; border-radius: 999px;
+  text-decoration: none; display: inline-block; font-weight: 700;
+}
+.ps-btn--primary{ background: var(--brand); color:#fff; border-color: var(--brand); }
+
+.ps-note{ color:#666; margin-top: 8px; }
+
+/* ===== comments ===== */
+.comments{ list-style: none; padding: 0; margin: 0; }
+.comment{ border-top: 1px solid var(--line); padding: 12px 2px; }
+.comment:first-child{ border-top: none; }
+.comment__meta{
+  display: flex; gap: 10px; align-items: baseline;
+  font-size: 12px; color: #666;
+}
+.comment__author{ font-weight: 800; color: #333; }
+.comment__time{ color: #888; }
+.comment__delete{
+  margin-left: auto; font-size: 12px; color: #B33;
+  text-decoration: none; border: 1px solid #F0D0D0;
+  padding: 4px 8px; border-radius: 999px;
+  background: #FFF5F5;
+}
+.comment__delete:hover{ background: #FFE8E8; }
+.comment__body{ margin-top: 6px; line-height: 1.8; white-space: pre-wrap; }
+.comment--empty{ color: #777; text-align: center; padding: 14px 0; }
+
+/* ===== forms ===== */
+.comment-form .np-input{ width: 100%; max-width: none; text-align: left; }
+.np-textarea{
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 10px 12px; resize: vertical; background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===== focus ===== */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+  outline: 3px solid color-mix(in oklab, var(--brand) 70%, white 30%);
+  outline-offset: 2px; border-radius: 6px;
+}
+
+/* ===== responsive ===== */
+@media (max-width: 640px){
+  .ps-section{ padding: 16px 12px 22px; }
+  .ps-title{ font-size: 22px; }
+  .ps-meta__row{ gap: 10px; }
+  .ps-photo__placeholder{ height: 260px; }
+}
+
+/* ===== dark mode (任意) ===== */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1113; --surface:#15181b; --text:#e8e8e8; --muted:#a5a8ad; --line:#2a2e33;
+  }
+  .ps-heading{ background:#171a1e; }
+  .ps-footer{ background:#171a1e; }
+  .comment__delete{ background:#2a1b1b; border-color:#3a2626; color:#ffb3b3; }
+}
+
+/* ===== print (任意) ===== */
+@media print{
+  .ps-card{ box-shadow:none; border-color:#ccc; }
+  .ps-footer, .comment__delete{ display:none !important; }
+}
+
+/* subheading for ingredient sections */
+.ps-subheading{
+  font-size: 16px;
+  font-weight: 800;
+  margin: 10px 0 6px;
+  color: var(--text);
+}
+
+/* Ingredients */
+.ingredients{
+  list-style: none; margin: 0; padding: 0;
+}
+.ingredients__item{
+  display: grid;
+  grid-template-columns: auto auto 1fr auto; /* qty | unit | name | note */
+  gap: 6px 10px;
+  padding: 6px 2px;
+  border-top: 1px dashed var(--line);
+}
+.ingredients__item:first-child{ border-top: none; }
+.ingredients__qty{
+  min-width: 3.5em; text-align: right; font-variant-numeric: tabular-nums;
+  color: var(--text); font-weight: 700;
+}
+.ingredients__unit{ color:#555; }
+.ingredients__name{ color: var(--text); }
+.ingredients__note{ color: var(--muted); font-size: 90%; }
+
+/* Steps */
+.steps{
+  counter-reset: step; margin: 0; padding: 0; list-style: none;
+}
+.steps__item{
+  padding: 10px 6px; border-top: 1px solid var(--line);
+}
+.steps__item:first-child{ border-top: none; }
+.steps__checkwrap{ display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: start; }
+.steps__check{ inline-size: 18px; block-size: 18px; margin-top: 4px; }
+.steps__text{ position: relative; padding-left: 0; }
+.steps__item .steps__text::before{
+  counter-increment: step;
+  content: counter(step) ". ";
+  font-weight: 800; margin-right: 4px;
+}
+
+/* チェック時に取り消し線＆淡色化（印刷時は除外） */
+.steps__check:checked + .steps__text{
+  text-decoration: line-through; color: var(--muted);
+}
+
+/* レスポンシブ微調整 */
+@media (max-width: 480px){
+  .ingredients__item{
+    grid-template-columns: auto auto 1fr; /* note は折り返し */
+  }
+}
+
+/* 印刷時はチェックボックス非表示 */
+@media print{
+  .steps__check{ display: none; }
+}
+
+/* 小見出し（材料の[A]/[B]など） */
+.ps-subheading{
+  font-size: 16px;
+  font-weight: 800;
+  margin: 10px 0 6px;
+}
+
+/* 材料: name | amount | note の3列 */
+.ingredients {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ingredients__item {
+  padding: 4px 0;
+  border-top: 1px dashed var(--line);
+  word-break: break-word; /* はみ出したら改行 */
+}
+.ingredients__item:first-child {
+  border-top: none;
+}
+.ingredients__amount {
+  margin-left: 0.25em; /* 数字と単位を少し空ける */
+}
+.ingredients__note {
+  margin-left: 0.25em;
+  color: var(--muted);
+  font-size: 90%;
+}
+
+@media (max-width: 480px){
+  .ingredients__item{ grid-template-columns: 1fr auto; } /* note は折返し */
+}
+
+/* 作り方（チェックで取り消し線） */
+.steps{ counter-reset: step; margin: 0; padding: 0; list-style: none; }
+.steps__item{ padding: 10px 6px; border-top: 1px solid var(--line); }
+.steps__item:first-child{ border-top: none; }
+.steps__checkwrap{ display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: start; }
+.steps__check{ inline-size: 18px; block-size: 18px; margin-top: 4px; }
+.steps__text{ position: relative; }
+.steps__item .steps__text::before{
+  counter-increment: step; content: counter(step) ". "; font-weight: 800; margin-right: 4px;
+}
+.steps__check:checked + .steps__text{ text-decoration: line-through; color: var(--muted); }
+@media print{ .steps__check{ display:none; } }
+
+/* 材料（チェック付き・横並び。狭い時は自然に折り返し） */
+.ingredients{ list-style:none; margin:0; padding:0; }
+.ingredients__item{
+  padding: 8px 0;
+  border-top: 1px dashed var(--line);
+}
+.ingredients__item:first-child{ border-top:none; }
+
+.ingredients__checkwrap{
+  display: grid;
+  grid-template-columns: 22px 1fr; /* 左:チェック / 右:テキスト */
+  gap: 10px;
+  align-items: start;
+}
+.ingredients__check{
+  inline-size: 18px;
+  block-size: 18px;
+  margin-top: 2px;
+}
+.ingredients__text{
+  word-break: break-word;          /* はみ出したら改行 */
+}
+.ingredients__name{ font-weight: 600; }
+.ingredients__amount{ margin-left: .35em; font-variant-numeric: tabular-nums; }
+.ingredients__note{ margin-left: .35em; color: var(--muted); font-size: 90%; }
+
+/* チェック時に取り消し線＆淡色化（作り方と同じ挙動） */
+.ingredients__check:checked + .ingredients__text{
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+/* 印刷時はチェック非表示 */
+@media print{
+  .ingredients__check{ display:none; }
+}
+
+/* ===== 材料見出しの横に何人前を表示 ===== */
+.ps-heading-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px; /* 見出し下の余白 */
+}
+
+.ps-servings {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--brand-weak);
+  padding: 4px 10px;
+  border-radius: 999px; /* 丸っこいラベル風 */
+}

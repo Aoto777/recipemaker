@@ -1,29 +1,45 @@
-<h2>Sign up</h2>
+<%# app/views/users/registrations/new.html.erb %>
+<main class="app">
+  <!-- 左サイド：ブランド -->
+  <section class="left" aria-label="brand">
+    <div class="topbar">
+      <a href="/" class="back" aria-label="ホームに戻る">←</a>
+      <a href="/" class="logo" aria-label="ホームに戻る">ホームに戻る</a>
+    </div>
+    <div class="title">新規登録</div>
+    <div class="footer-note">登録をすると自分のレシピを　　　　　　投稿できるようになります</div>
+  </section>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
+  <!-- 右サイド：フォーム -->
+  <section class="right" aria-label="signup-form">
+    <div class="panel">
+      <p class="help">必要事項を入力してアカウントを作成してください。</p>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+      <%= render "users/shared/error_messages", resource: resource if defined?(resource) %>
 
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <label class="label" for="user_email">メールアドレス</label>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input", placeholder: "you@example.com" %>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+        <div style="height:12px"></div>
 
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
+        <label class="label" for="user_password">パスワード
+          <% if @minimum_password_length %>
+            <small style="color:#6b7280;">（<%= @minimum_password_length %>文字以上）</small>
+          <% end %>
+        </label>
+        <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
 
-<%= render "users/shared/links" %>
+        <div style="height:12px"></div>
+
+        <label class="label" for="user_password_confirmation">パスワード（確認）</label>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
+
+        <%= f.submit "アカウントを作成", class: "primary" %>
+      <% end %>
+
+      <div class="divider"><span>既にアカウントをお持ちの方</span></div>
+      <%= link_to "ログインへ戻る", new_session_path(resource_name), class: "outline" %>
+    </div>
+  </section>
+</main>
