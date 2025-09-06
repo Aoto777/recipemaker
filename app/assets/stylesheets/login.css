@@ -89,9 +89,8 @@ body {
 }
 
 .panel {
-  width: min(640px, 92vw);
+  width: calc(min(92vw, 640px));
 }
-
 .help {
   margin: 0 0 14px;
   font-weight: 700;
